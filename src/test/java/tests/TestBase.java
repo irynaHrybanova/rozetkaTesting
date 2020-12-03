@@ -3,35 +3,44 @@ package tests;
 import config.PropertiesReader;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
-import java.time.Duration;
-
 public class TestBase {
+	private PropertiesReader propertiesReader;
 	private WebDriver driver;
 
 	@BeforeSuite
 	public void setUpWebDriver() {
-		String driverName = PropertiesReader.getProperties("driver.name");
-		String driverPath = PropertiesReader.getProperties("driver.path");
-		System.setProperty(driverName, driverPath);
-		driver = new ChromeDriver();
-
-		driver.manage().window().maximize();
-		new WebDriverWait(driver, Duration.ofSeconds(3));
-		driver.get(PropertiesReader.getProperties("site.url"));
+		propertiesReader = new PropertiesReader();
+		driver = initDriver();
 	}
 
 	public WebDriver getDriver() {
+		driver.navigate().refresh();
 		return driver;
+	}
+
+	private WebDriver initDriver() {
+		String driverName = getProperty("driver.name");
+		String driverPath = getProperty("driver.path");
+		System.setProperty(driverName, driverPath);
+		WebDriver driver = new ChromeDriver();
+
+		driver.manage().window().maximize();
+		//new WebDriverWait(driver, Duration.ofSeconds(5));
+		driver.get(getProperty("site.url"));
+		return driver;
+	}
+
+	protected String getProperty(String name) {
+		return propertiesReader.getProperties(name);
 	}
 
 	@AfterSuite
 	public void tearDown() {
 		if (driver != null) {
-			driver.quit();
+			driver.close();
 		}
 	}
 }
