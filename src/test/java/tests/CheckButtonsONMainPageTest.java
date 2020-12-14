@@ -12,7 +12,6 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		RozetkaHomePage rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
 		rozetkaHomePage.clickOnChangeLanguageUA();
 		Assert.assertTrue(rozetkaHomePage.isUALanguage());
-
 		rozetkaHomePage.clickOnChangeLanguageRU();
 		Assert.assertTrue(rozetkaHomePage.isRULanguage());
 	}

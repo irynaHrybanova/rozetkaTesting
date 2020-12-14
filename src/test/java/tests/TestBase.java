@@ -28,7 +28,6 @@ public class TestBase {
 		WebDriver driver = new ChromeDriver();
 
 		driver.manage().window().maximize();
-		//new WebDriverWait(driver, Duration.ofSeconds(5));
 		driver.get(getProperty("site.url"));
 		return driver;
 	}
