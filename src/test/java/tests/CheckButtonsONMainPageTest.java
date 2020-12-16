@@ -22,4 +22,11 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		rozetkaHomePage.clickOnContactPhoneNumber();
 		Assert.assertTrue(rozetkaHomePage.isOpenModalWindow());
 	}
+
+	@Test(priority = 2)
+	void searchProduct() {
+		RozetkaHomePage rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
+		rozetkaHomePage.searchProduct();
+		Assert.assertTrue(rozetkaHomePage.isProductName());
+	}
 }

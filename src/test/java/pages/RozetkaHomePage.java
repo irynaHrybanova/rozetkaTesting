@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class RozetkaHomePage {
 	private final WebDriver driver;
@@ -53,5 +54,26 @@ public class RozetkaHomePage {
 
 	private WebDriverWait getWait(long sec) {
 		return new WebDriverWait(driver, Duration.ofSeconds(sec));
+	}
+
+	public void searchProduct() {
+		String searchLocator = propertiesReader.getProperties("searchBar.name");
+		WebElement searchBar = getWait(50).until(ExpectedConditions.elementToBeClickable(By.name(searchLocator)));
+		searchBar.sendKeys(propertiesReader.getProperties("searchProduct.name"));
+
+		String searchButtonPath = propertiesReader.getProperties("searchButton.xpath");
+		WebElement searchButton = driver.findElement(By.xpath(searchButtonPath));
+		searchButton.click();
+	}
+
+	public boolean isProductName() {
+		List<WebElement> products = driver.findElements(By.className("products.classNames"));
+
+		for (WebElement product : products) {
+			if (!product.getText().toLowerCase().contains(propertiesReader.getProperties("searchBar.name").toLowerCase())) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
