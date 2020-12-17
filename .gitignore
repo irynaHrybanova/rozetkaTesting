@@ -2,3 +2,6 @@
 target
 rozetkaTesting.iml
 *.log
+*.json
+*.xml
+*.html
