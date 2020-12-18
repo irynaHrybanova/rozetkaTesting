@@ -34,9 +34,12 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		test.pass("Language was changed");
 		rozetkaHomePage.clickOnChangeLanguageRU();
 		test.pass("Clicked on RU to change language");
-		Assert.assertTrue(rozetkaHomePage.isRULanguage());
-		test.pass("Language was changed");
-		test.log(Status.PASS, "Test is complete");
+		if (rozetkaHomePage.isRULanguage()) {
+			test.pass("Language was changed");
+			test.log(Status.PASS, "Test is complete");
+		} else {
+			test.log(Status.FAIL, "Fail");
+		}
 	}
 
 	@Test(priority = 1)
@@ -45,9 +48,12 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		RozetkaHomePage rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
 		rozetkaHomePage.clickOnContactPhoneNumber();
 		test.pass("Clicked on contact phone number");
-		Assert.assertTrue(rozetkaHomePage.isOpenModalWindow());
-		test.pass("Contact phones were shown");
-		test.log(Status.PASS, "Test is complete");
+		if (rozetkaHomePage.isOpenModalWindow()) {
+			test.pass("Contact phones were shown");
+			test.log(Status.PASS, "Test is complete");
+		} else {
+			test.log(Status.FAIL, "Fail");
+		}
 	}
 
 	@Test(priority = 2)
@@ -56,9 +62,32 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		RozetkaHomePage rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
 		rozetkaHomePage.searchProduct();
 		test.pass("Goods were found");
-		Assert.assertTrue(rozetkaHomePage.isProductName());
-		test.pass("All goods correspond to search name");
-		test.log(Status.PASS, "Test is complete");
+		if (rozetkaHomePage.isProductName()) {
+			test.pass("All goods correspond to search name");
+			test.log(Status.PASS, "Test is complete");
+			rozetkaHomePage.goToHomePage();
+		} else {
+			test.log(Status.FAIL, "Fail");
+		}
+		rozetkaHomePage.goToHomePage();
+	}
+
+	@Test(priority = 2)
+	void addProductToShoppingCart() {
+		test = report.createTest("add product to shopping cart");
+		RozetkaHomePage rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
+		rozetkaHomePage.addProductToCart();
+		test.pass("Product added to shopping cart");
+		rozetkaHomePage.clickOnOrderProductButton();
+		test.pass("Clicked on order button");
+		if (rozetkaHomePage.isOrderPageOpen()) {
+			test.pass("Order page is open");
+			test.log(Status.PASS, "Test is complete");
+			rozetkaHomePage.goToHomePage();
+		} else {
+			test.log(Status.FAIL, "Fail");
+		}
+		rozetkaHomePage.goToHomePage();
 	}
 
 	@AfterClass

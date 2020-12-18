@@ -22,12 +22,12 @@ public class RozetkaHomePage {
 	}
 
 	public void clickOnChangeLanguageUA() {
-		WebElement languageReferenceUA = getWait(10L).until(ExpectedConditions.elementToBeClickable((By.linkText("UA"))));
+		WebElement languageReferenceUA = getWait(10).until(ExpectedConditions.elementToBeClickable((By.linkText("UA"))));
 		languageReferenceUA.click();
 	}
 
 	public void clickOnChangeLanguageRU() {
-		WebElement languageReferenceRU = getWait(10L).until(ExpectedConditions.elementToBeClickable(By.linkText("RU")));
+		WebElement languageReferenceRU = getWait(10).until(ExpectedConditions.elementToBeClickable(By.linkText("RU")));
 		languageReferenceRU.click();
 	}
 
@@ -41,13 +41,13 @@ public class RozetkaHomePage {
 
 	public void clickOnContactPhoneNumber() {
 		String phoneButton = propertiesReader.getProperties("contactPhoneButton.xpath");
-		WebElement contactPhoneButton = getWait(10L).until(ExpectedConditions.elementToBeClickable((By.xpath(phoneButton))));
+		WebElement contactPhoneButton = getWait(10).until(ExpectedConditions.elementToBeClickable((By.xpath(phoneButton))));
 		contactPhoneButton.click();
 	}
 
 	public boolean isOpenModalWindow() {
 		String modalWindow = propertiesReader.getProperties("modalWindow.title.xpath");
-		WebElement modalWindowTitle = getWait(12L).until(ExpectedConditions.elementToBeClickable((By.xpath(modalWindow))));
+		WebElement modalWindowTitle = getWait(12).until(ExpectedConditions.elementToBeClickable((By.xpath(modalWindow))));
 		String title = modalWindowTitle.getText();
 		return title.contains(propertiesReader.getProperties("modalWindow.RUTitle"));
 	}
@@ -58,7 +58,7 @@ public class RozetkaHomePage {
 
 	public void searchProduct() {
 		String searchLocator = propertiesReader.getProperties("searchBar.name");
-		WebElement searchBar = getWait(50).until(ExpectedConditions.elementToBeClickable(By.name(searchLocator)));
+		WebElement searchBar = getWait(30).until(ExpectedConditions.elementToBeClickable(By.name(searchLocator)));
 		searchBar.sendKeys(propertiesReader.getProperties("searchProduct.name"));
 
 		String searchButtonPath = propertiesReader.getProperties("searchButton.xpath");
@@ -75,5 +75,29 @@ public class RozetkaHomePage {
 			}
 		}
 		return true;
+	}
+
+	public void addProductToCart() {
+		String productRefer = propertiesReader.getProperties("productRefer");
+		driver.navigate().to(productRefer);
+		String buyButtonLocator = propertiesReader.getProperties("buyButton.className");
+		WebElement buyButton = getWait(20).until(ExpectedConditions.elementToBeClickable(By.className(buyButtonLocator)));
+		buyButton.click();
+	}
+
+	public void clickOnOrderProductButton() {
+		String orderProductButton = propertiesReader.getProperties("orderProductButton.className");
+		WebElement orderButton = getWait(10).until(ExpectedConditions.elementToBeClickable(By.className(orderProductButton)));
+		orderButton.click();
+	}
+
+	public boolean isOrderPageOpen() {
+		String headerLocator = propertiesReader.getProperties("orderHeading.className");
+		WebElement header = getWait(20).until(ExpectedConditions.elementToBeClickable(By.className(headerLocator)));
+		return header.getText().contains(propertiesReader.getProperties("orderHeading.name"));
+	}
+
+	public void goToHomePage() {
+		driver.navigate().to(propertiesReader.getProperties("site.url"));
 	}
 }
