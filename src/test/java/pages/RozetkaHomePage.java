@@ -22,12 +22,16 @@ public class RozetkaHomePage {
 	}
 
 	public void clickOnChangeLanguageUA() {
-		WebElement languageReferenceUA = getWait(10).until(ExpectedConditions.elementToBeClickable((By.linkText("UA"))));
+		WebElement languageReferenceUA = waitWebElement(10, By.linkText("UA"));
 		languageReferenceUA.click();
 	}
 
+	private WebElement waitWebElement(long seconds, By locator) {
+		return getWait(seconds).until(ExpectedConditions.elementToBeClickable(locator));
+	}
+
 	public void clickOnChangeLanguageRU() {
-		WebElement languageReferenceRU = getWait(10).until(ExpectedConditions.elementToBeClickable(By.linkText("RU")));
+		WebElement languageReferenceRU = waitWebElement(10, By.linkText("RU"));
 		languageReferenceRU.click();
 	}
 
@@ -41,13 +45,13 @@ public class RozetkaHomePage {
 
 	public void clickOnContactPhoneNumber() {
 		String phoneButton = propertiesReader.getProperties("contactPhoneButton.xpath");
-		WebElement contactPhoneButton = getWait(10).until(ExpectedConditions.elementToBeClickable((By.xpath(phoneButton))));
+		WebElement contactPhoneButton = waitWebElement(10, By.xpath(phoneButton));
 		contactPhoneButton.click();
 	}
 
 	public boolean isOpenModalWindow() {
 		String modalWindow = propertiesReader.getProperties("modalWindow.title.xpath");
-		WebElement modalWindowTitle = getWait(12).until(ExpectedConditions.elementToBeClickable((By.xpath(modalWindow))));
+		WebElement modalWindowTitle = waitWebElement(12, By.xpath(modalWindow));
 		String title = modalWindowTitle.getText();
 		return title.contains(propertiesReader.getProperties("modalWindow.RUTitle"));
 	}
@@ -58,7 +62,7 @@ public class RozetkaHomePage {
 
 	public void searchProduct() {
 		String searchLocator = propertiesReader.getProperties("searchBar.name");
-		WebElement searchBar = getWait(30).until(ExpectedConditions.elementToBeClickable(By.name(searchLocator)));
+		WebElement searchBar = waitWebElement(20, By.name(searchLocator));
 		searchBar.sendKeys(propertiesReader.getProperties("searchProduct.name"));
 
 		String searchButtonPath = propertiesReader.getProperties("searchButton.xpath");
@@ -78,22 +82,21 @@ public class RozetkaHomePage {
 	}
 
 	public void addProductToCart() {
-		String productRefer = propertiesReader.getProperties("productRefer");
-		driver.navigate().to(productRefer);
+		driver.navigate().to(propertiesReader.getProperties("productRefer"));
 		String buyButtonLocator = propertiesReader.getProperties("buyButton.className");
-		WebElement buyButton = getWait(20).until(ExpectedConditions.elementToBeClickable(By.className(buyButtonLocator)));
+		WebElement buyButton = waitWebElement(20, By.className(buyButtonLocator));
 		buyButton.click();
 	}
 
 	public void clickOnOrderProductButton() {
 		String orderProductButton = propertiesReader.getProperties("orderProductButton.className");
-		WebElement orderButton = getWait(10).until(ExpectedConditions.elementToBeClickable(By.className(orderProductButton)));
+		WebElement orderButton = waitWebElement(15, By.className(orderProductButton));
 		orderButton.click();
 	}
 
 	public boolean isOrderPageOpen() {
 		String headerLocator = propertiesReader.getProperties("orderHeading.className");
-		WebElement header = getWait(20).until(ExpectedConditions.elementToBeClickable(By.className(headerLocator)));
+		WebElement header = waitWebElement(10, By.className(headerLocator));
 		return header.getText().contains(propertiesReader.getProperties("orderHeading.name"));
 	}
 

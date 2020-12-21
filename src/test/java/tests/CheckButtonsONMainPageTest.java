@@ -8,6 +8,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pages.RozetkaHomePage;
 
@@ -15,19 +16,24 @@ public class CheckButtonsONMainPageTest extends TestBase {
 
 	private static ExtentReports report;
 	private static ExtentTest test;
+	private RozetkaHomePage rozetkaHomePage;
 
 	@BeforeClass
-	static void init() {
+	static void initStatic() {
 		report = new ExtentReports();
 		ExtentKlovReporter klovReporter = new ExtentKlovReporter("Rozetka");
 		klovReporter.initMongoDbConnection("localhost", 27017);
 		report.attachReporter(klovReporter);
 	}
 
+	@BeforeTest
+	private void init() {
+		rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
+	}
+
 	@Test
 	void checkLanguageChange() {
 		test = report.createTest("Check language change");
-		RozetkaHomePage rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
 		rozetkaHomePage.clickOnChangeLanguageUA();
 		test.pass("Clicked on UA to change language");
 		Assert.assertTrue(rozetkaHomePage.isUALanguage());
@@ -45,7 +51,6 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	@Test(priority = 1)
 	void checkContactsPhoneNumber() {
 		test = report.createTest("Check contacts phone number");
-		RozetkaHomePage rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
 		rozetkaHomePage.clickOnContactPhoneNumber();
 		test.pass("Clicked on contact phone number");
 		if (rozetkaHomePage.isOpenModalWindow()) {
@@ -59,7 +64,6 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	@Test(priority = 2)
 	void searchProduct() {
 		test = report.createTest("Search product");
-		RozetkaHomePage rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
 		rozetkaHomePage.searchProduct();
 		test.pass("Goods were found");
 		if (rozetkaHomePage.isProductName()) {
@@ -75,7 +79,6 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	@Test(priority = 2)
 	void addProductToShoppingCart() {
 		test = report.createTest("add product to shopping cart");
-		RozetkaHomePage rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
 		rozetkaHomePage.addProductToCart();
 		test.pass("Product added to shopping cart");
 		rozetkaHomePage.clickOnOrderProductButton();
