@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RozetkaHomePage {
@@ -98,6 +99,22 @@ public class RozetkaHomePage {
 		String headerLocator = propertiesReader.getProperties("orderHeading.className");
 		WebElement header = waitWebElement(10, By.className(headerLocator));
 		return header.getText().contains(propertiesReader.getProperties("orderHeading.name"));
+	}
+
+	public List<WebElement> getAddressesWebElements() {
+		String addressesLocator = propertiesReader.getProperties("address.className");
+		return driver.findElements(By.className(addressesLocator));
+	}
+
+	public boolean isAddressRight(WebElement electedAddress) {
+		electedAddress.click();
+		String addressInModalWindowLocator = propertiesReader.getProperties("addressInModalWindow");
+		WebElement addressInModalWindow = waitWebElement(30, By.className(addressInModalWindowLocator));
+		boolean result = addressInModalWindow.getText().contains(electedAddress.getText());
+		String closeModalWindowLocator = propertiesReader.getProperties("closeModalWindow");
+		WebElement closeModalWindow = waitWebElement(30, By.className(closeModalWindowLocator));
+		closeModalWindow.click();
+		return result;
 	}
 
 	public void goToHomePage() {

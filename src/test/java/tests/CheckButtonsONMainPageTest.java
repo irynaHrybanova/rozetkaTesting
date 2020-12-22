@@ -4,6 +4,7 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentKlovReporter;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -11,6 +12,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pages.RozetkaHomePage;
+
+import java.util.List;
 
 public class CheckButtonsONMainPageTest extends TestBase {
 
@@ -41,8 +44,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		rozetkaHomePage.clickOnChangeLanguageRU();
 		test.pass("Clicked on RU to change language");
 		if (rozetkaHomePage.isRULanguage()) {
-			test.pass("Language was changed");
-			test.log(Status.PASS, "Test is complete");
+			test.log(Status.PASS, "Language was changed. Test successfully completed");
 		} else {
 			test.log(Status.FAIL, "Fail");
 		}
@@ -54,8 +56,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		rozetkaHomePage.clickOnContactPhoneNumber();
 		test.pass("Clicked on contact phone number");
 		if (rozetkaHomePage.isOpenModalWindow()) {
-			test.pass("Contact phones were shown");
-			test.log(Status.PASS, "Test is complete");
+			test.log(Status.PASS, "Contact phones were shown. Test successfully completed");
 		} else {
 			test.log(Status.FAIL, "Fail");
 		}
@@ -67,8 +68,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		rozetkaHomePage.searchProduct();
 		test.pass("Goods were found");
 		if (rozetkaHomePage.isProductName()) {
-			test.pass("All goods correspond to search name");
-			test.log(Status.PASS, "Test is complete");
+			test.log(Status.PASS, "All goods correspond to search name. Test successfully completed");
 			rozetkaHomePage.goToHomePage();
 		} else {
 			test.log(Status.FAIL, "Fail");
@@ -78,19 +78,34 @@ public class CheckButtonsONMainPageTest extends TestBase {
 
 	@Test(priority = 2)
 	void addProductToShoppingCart() {
-		test = report.createTest("add product to shopping cart");
+		test = report.createTest("Add product to shopping cart");
 		rozetkaHomePage.addProductToCart();
 		test.pass("Product added to shopping cart");
 		rozetkaHomePage.clickOnOrderProductButton();
 		test.pass("Clicked on order button");
 		if (rozetkaHomePage.isOrderPageOpen()) {
-			test.pass("Order page is open");
-			test.log(Status.PASS, "Test is complete");
+			test.log(Status.PASS, "Order page is open. Test successfully completed");
 			rozetkaHomePage.goToHomePage();
 		} else {
 			test.log(Status.FAIL, "Fail");
 		}
 		rozetkaHomePage.goToHomePage();
+	}
+
+	@Test(priority = 2)
+	void checkShopsAddress() {
+		test = report.createTest("Check Shops address");
+
+		List<WebElement> elements = rozetkaHomePage.getAddressesWebElements();
+		for (WebElement element : elements) {
+			String text = element.getText();
+			test.pass("Click on shop address ");
+			if (rozetkaHomePage.isAddressRight(element)) {
+				test.log(Status.PASS, "Address is the same: " + text);
+			} else {
+				test.log(Status.FAIL, "Address NOT the same: " + text);
+			}
+		}
 	}
 
 	@AfterClass
