@@ -1,5 +1,7 @@
 package pages;
 
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import config.PropertiesReader;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -9,7 +11,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RozetkaHomePage {
@@ -102,19 +103,30 @@ public class RozetkaHomePage {
 	}
 
 	public List<WebElement> getAddressesWebElements() {
+		waitWebElement(10, By.className(propertiesReader.getProperties("modalWindowsAddress.className")));
 		String addressesLocator = propertiesReader.getProperties("address.className");
 		return driver.findElements(By.className(addressesLocator));
 	}
 
-	public boolean isAddressRight(WebElement electedAddress) {
-		electedAddress.click();
-		String addressInModalWindowLocator = propertiesReader.getProperties("addressInModalWindow");
-		WebElement addressInModalWindow = waitWebElement(30, By.className(addressInModalWindowLocator));
-		boolean result = addressInModalWindow.getText().contains(electedAddress.getText());
-		String closeModalWindowLocator = propertiesReader.getProperties("closeModalWindow");
-		WebElement closeModalWindow = waitWebElement(30, By.className(closeModalWindowLocator));
-		closeModalWindow.click();
-		return result;
+	public void clickOnFirstAddress() {
+		String addressLocator = propertiesReader.getProperties("firstAddress.className");
+		WebElement address = waitWebElement(10, By.className(addressLocator));
+		address.click();
+	}
+
+	public boolean isAddressRight(WebElement addressButton, ExtentTest test) {
+		addressButton.click();
+		String addressOnMapLocator = propertiesReader.getProperties("addressOnMap.className");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException ignored) {
+		}
+		WebElement addressInModalWindow = waitWebElement(10, By.className(addressOnMapLocator));
+		String text = addressButton.findElement(By.className(propertiesReader.getProperties("addressName.className"))).getText();
+
+		String modalAddress = addressInModalWindow.getText();
+		test.log(Status.INFO, String.format("Comparing: %s and: %s", modalAddress, text));
+		return modalAddress.contains(text);
 	}
 
 	public void goToHomePage() {

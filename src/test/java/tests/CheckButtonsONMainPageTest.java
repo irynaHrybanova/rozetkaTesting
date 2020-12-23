@@ -4,6 +4,7 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentKlovReporter;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
@@ -95,15 +96,17 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	@Test(priority = 2)
 	void checkShopsAddress() {
 		test = report.createTest("Check Shops address");
-
-		List<WebElement> elements = rozetkaHomePage.getAddressesWebElements();
-		for (WebElement element : elements) {
-			String text = element.getText();
-			test.pass("Click on shop address ");
-			if (rozetkaHomePage.isAddressRight(element)) {
-				test.log(Status.PASS, "Address is the same: " + text);
+		test.log(Status.INFO, "Start test");
+		rozetkaHomePage.clickOnFirstAddress();
+		List<WebElement> modalAddressButtons = rozetkaHomePage.getAddressesWebElements();
+		test.log(Status.INFO, "Get address buttons");
+		for (WebElement button : modalAddressButtons) {
+			String text = button.findElement(By.className(getProperty("addressName.className"))).getText();
+			test.pass("Click on shop address " + text);
+			if (rozetkaHomePage.isAddressRight(button, test)) {
+				test.log(Status.PASS, "Address is the same " + text);
 			} else {
-				test.log(Status.FAIL, "Address NOT the same: " + text);
+				test.log(Status.FAIL, "Address NOT the same " + text);
 			}
 		}
 	}
