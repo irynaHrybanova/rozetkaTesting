@@ -6,6 +6,7 @@ import config.PropertiesReader;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -131,5 +132,18 @@ public class RozetkaHomePage {
 
 	public void goToHomePage() {
 		driver.navigate().to(propertiesReader.getProperties("site.url"));
+	}
+
+	public void getPageWithVacuumCleaners() {
+		String menuCategory = propertiesReader.getProperties("homeDevices.linkText");
+		String vacuumCleaner = propertiesReader.getProperties("vacuumCleaner.linkText");
+		Actions actions = new Actions(driver);
+		actions.moveToElement(driver.findElement(By.linkText(menuCategory))).build().perform();
+		waitWebElement(5, By.linkText(vacuumCleaner)).click();
+	}
+
+	public void selectBrand() {
+		String brand = propertiesReader.getProperties("brand.id");
+		driver.findElement(By.id(brand)).findElement(By.xpath("./..")).click(); //todo check results
 	}
 }

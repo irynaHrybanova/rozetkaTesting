@@ -111,6 +111,12 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		}
 	}
 
+	@Test
+	void selectProductCharacteristics() {
+		rozetkaHomePage.getPageWithVacuumCleaners();
+		rozetkaHomePage.selectBrand();
+	}
+
 	@AfterClass
 	static void endTestCase() {
 		report.flush();
