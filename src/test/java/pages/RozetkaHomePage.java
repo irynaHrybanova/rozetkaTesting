@@ -74,7 +74,7 @@ public class RozetkaHomePage {
 	}
 
 	public boolean isProductName() {
-		List<WebElement> products = driver.findElements(By.className("products.classNames"));
+		List<WebElement> products = driver.findElements(By.className(propertiesReader.getProperties("products.classNames")));
 
 		for (WebElement product : products) {
 			if (!product.getText().toLowerCase().contains(propertiesReader.getProperties("searchBar.name").toLowerCase())) {
@@ -144,6 +144,20 @@ public class RozetkaHomePage {
 
 	public void selectBrand() {
 		String brand = propertiesReader.getProperties("brand.id");
-		driver.findElement(By.id(brand)).findElement(By.xpath("./..")).click(); //todo check results
+		driver.findElement(By.id(brand)).findElement(By.xpath("./..")).click();
+	}
+
+	public boolean isBrandCorrect() {
+		List<WebElement> vacuumCleaners = driver.findElements(By.className(propertiesReader.getProperties("cleanerTitle.className")));
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException ignored) {
+		}
+		for (WebElement element : vacuumCleaners) {
+			if (!element.getText().toLowerCase().contains(propertiesReader.getProperties("brand.name").toLowerCase())) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

@@ -112,9 +112,19 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	}
 
 	@Test
-	void selectProductCharacteristics() {
+	void selectProductCharacteristics() { //todo add others characteristics
+		test = report.createTest("Select product characteristics");
+		test.log(Status.INFO, "Start test");
 		rozetkaHomePage.getPageWithVacuumCleaners();
+		test.log(Status.INFO, "Open page with vacuum cleaners");
 		rozetkaHomePage.selectBrand();
+		test.log(Status.INFO, "Sort vacuum cleaners by brand");
+		if (rozetkaHomePage.isBrandCorrect()) {
+			test.pass("Correct output value. Test successfully completed");
+		}
+		else {
+			test.fail("Sort by brand incorrect");
+		}
 	}
 
 	@AfterClass
