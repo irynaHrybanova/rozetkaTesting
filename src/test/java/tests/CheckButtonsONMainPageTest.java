@@ -4,6 +4,7 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentKlovReporter;
+import config.PropertiesReader;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
@@ -21,6 +22,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	private static ExtentReports report;
 	private static ExtentTest test;
 	private RozetkaHomePage rozetkaHomePage;
+	private PropertiesReader propertiesReader;
 
 	@BeforeClass
 	static void initStatic() {
@@ -33,6 +35,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	@BeforeTest
 	private void init() {
 		rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
+		propertiesReader = new PropertiesReader();
 	}
 
 	@Test
@@ -112,18 +115,24 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	}
 
 	@Test
-	void selectProductCharacteristics() { //todo add others characteristics
+	void selectProductCharacteristics() {
 		test = report.createTest("Select product characteristics");
 		test.log(Status.INFO, "Start test");
 		rozetkaHomePage.getPageWithVacuumCleaners();
 		test.log(Status.INFO, "Open page with vacuum cleaners");
 		rozetkaHomePage.selectBrand();
-		test.log(Status.INFO, "Sort vacuum cleaners by brand");
+		test.log(Status.INFO, "Sort vacuum cleaners by brand: " + propertiesReader.getProperties("brand.name"));
 		if (rozetkaHomePage.isBrandCorrect()) {
-			test.pass("Correct output value. Test successfully completed");
-		}
-		else {
+			test.pass("Correct output value: brand.");
+		} else {
 			test.fail("Sort by brand incorrect");
+		}
+		rozetkaHomePage.selectInterval();
+		test.log(Status.INFO, "Select Max price: " + propertiesReader.getProperties("priceLimit"));
+		if (rozetkaHomePage.isPriceCorrect()) {
+			test.log(Status.PASS, "Correct filtration by price. Test successfully completed");
+		} else {
+			test.fail("Incorrect filtration by price");
 		}
 	}
 

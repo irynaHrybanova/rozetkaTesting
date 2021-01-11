@@ -16,7 +16,7 @@ import java.util.List;
 
 public class RozetkaHomePage {
 	private final WebDriver driver;
-	PropertiesReader propertiesReader;
+	private PropertiesReader propertiesReader;
 
 	public RozetkaHomePage(WebDriver driver) {
 		PageFactory.initElements(driver, this);
@@ -75,7 +75,7 @@ public class RozetkaHomePage {
 
 	public boolean isProductName() {
 		List<WebElement> products = driver.findElements(By.className(propertiesReader.getProperties("products.classNames")));
-
+		sleep(1000);
 		for (WebElement product : products) {
 			if (!product.getText().toLowerCase().contains(propertiesReader.getProperties("searchBar.name").toLowerCase())) {
 				return false;
@@ -111,17 +111,14 @@ public class RozetkaHomePage {
 
 	public void clickOnFirstAddress() {
 		String addressLocator = propertiesReader.getProperties("firstAddress.className");
-		WebElement address = waitWebElement(10, By.className(addressLocator));
+		WebElement address = waitWebElement(20, By.className(addressLocator));
 		address.click();
 	}
 
 	public boolean isAddressRight(WebElement addressButton, ExtentTest test) {
 		addressButton.click();
 		String addressOnMapLocator = propertiesReader.getProperties("addressOnMap.className");
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException ignored) {
-		}
+		sleep(1000);
 		WebElement addressInModalWindow = waitWebElement(10, By.className(addressOnMapLocator));
 		String text = addressButton.findElement(By.className(propertiesReader.getProperties("addressName.className"))).getText();
 
@@ -139,7 +136,7 @@ public class RozetkaHomePage {
 		String vacuumCleaner = propertiesReader.getProperties("vacuumCleaner.linkText");
 		Actions actions = new Actions(driver);
 		actions.moveToElement(driver.findElement(By.linkText(menuCategory))).build().perform();
-		waitWebElement(5, By.linkText(vacuumCleaner)).click();
+		waitWebElement(15, By.linkText(vacuumCleaner)).click();
 	}
 
 	public void selectBrand() {
@@ -147,17 +144,40 @@ public class RozetkaHomePage {
 		driver.findElement(By.id(brand)).findElement(By.xpath("./..")).click();
 	}
 
+	public void selectInterval() {
+		String maxLimitLocator = propertiesReader.getProperties("maxLimit");
+		WebElement maxLimit = waitWebElement(10, By.xpath(maxLimitLocator));
+		maxLimit.clear();
+		maxLimit.sendKeys(propertiesReader.getProperties("priceLimit"));
+		maxLimit.submit();
+		sleep(2000);
+	}
+
 	public boolean isBrandCorrect() {
 		List<WebElement> vacuumCleaners = driver.findElements(By.className(propertiesReader.getProperties("cleanerTitle.className")));
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException ignored) {
-		}
+		sleep(6000);
 		for (WebElement element : vacuumCleaners) {
 			if (!element.getText().toLowerCase().contains(propertiesReader.getProperties("brand.name").toLowerCase())) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	private void sleep(int i) {
+		try {
+			Thread.sleep(i);
+		} catch (InterruptedException ignored) {
+		}
+	}
+
+	public boolean isPriceCorrect() {
+		List<WebElement> vacuumCleanersPrices = driver.findElements(By.className(propertiesReader.getProperties("cleanerPrice.className")));
+		sleep(2000);
+		int priceLimit = Integer.parseInt(propertiesReader.getProperties("priceLimit"));
+		return vacuumCleanersPrices.stream()
+				.map(element -> element.getText().replaceAll(" ", ""))
+				.map(Integer::parseInt)
+				.noneMatch(price -> price > priceLimit);
 	}
 }
