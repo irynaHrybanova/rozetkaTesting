@@ -6,22 +6,27 @@ import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.model.Media;
 import com.aventstack.extentreports.reporter.ExtentKlovReporter;
 import config.PropertiesReader;
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import pages.ContactsPage;
 import pages.RozetkaHomePage;
+
+import java.util.List;
 
 public class CheckButtonsONMainPageTest extends TestBase {
 
 	private static ExtentReports report;
 	private static ExtentTest test;
 	private RozetkaHomePage rozetkaHomePage;
-	/*private ContactsPage contactsPage;*/
+	private ContactsPage contactsPage;
 	private PropertiesReader propertiesReader;
 
 	@BeforeClass
@@ -36,22 +41,23 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	@BeforeTest
 	private void init() {
 		rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
-		/*contactsPage = PageFactory.initElements(getDriver(), ContactsPage.class);*/
+		contactsPage = PageFactory.initElements(getDriver(), ContactsPage.class);
 		propertiesReader = new PropertiesReader();
 	}
 
 	@Test
 	void checkLanguageChange() {
-		rozetkaHomePage.clickOnChangeLanguageUA();
-		test.info("Clicked on UA to change language");
-		Assert.assertTrue(rozetkaHomePage.isUALanguage());
-		test.info("Language was changed");
+		test = report.createTest("Check language change");
 		rozetkaHomePage.clickOnChangeLanguageRU();
 		test.info("Clicked on RU to change language");
-		if (rozetkaHomePage.isRULanguage()) {
+		Assert.assertTrue(rozetkaHomePage.isRULanguage());
+		test.info("Language was changed");
+		rozetkaHomePage.clickOnChangeLanguageUA();
+		test.info("Clicked on UA to change language");
+		if (rozetkaHomePage.isUALanguage()) {
 			test.pass("Language was changed. Test successfully completed");
 		} else {
-			test.fail("Test failed");
+			test.fail("Test failed", takeScreenshot());
 		}
 	}
 
@@ -63,7 +69,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		if (rozetkaHomePage.isOpenModalWindow()) {
 			test.pass("Contact phones were shown. Test successfully completed");
 		} else {
-			test.fail("Test failed");
+			test.fail("Test failed", takeScreenshot());
 		}
 	}
 
@@ -76,7 +82,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 			test.pass("All goods correspond to search name. Test successfully completed");
 			rozetkaHomePage.goToHomePage();
 		} else {
-			test.fail("Test failed");
+			test.fail("Test failed", takeScreenshot());
 		}
 		rozetkaHomePage.goToHomePage();
 	}
@@ -92,14 +98,14 @@ public class CheckButtonsONMainPageTest extends TestBase {
 			test.pass("Order page is open. Test successfully completed");
 			rozetkaHomePage.goToHomePage();
 		} else {
-			test.fail("Test failed");
+			test.fail("Test failed", takeScreenshot());
 		}
 		rozetkaHomePage.goToHomePage();
 	}
 
 	@Test(priority = 2)
 	void checkShopsAddress() {
-		/*test = report.createTest("Check Shops address");
+		test = report.createTest("Check Shops address");
 		test.info("Start test");
 		contactsPage.clickOnContactsButton();
 		test.info("Click on Contacts button");
@@ -108,15 +114,15 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		test.info("Get address buttons");
 
 		for (WebElement button : modalAddressButtons) {
-			String text = button.findElement(By.className(getProperty("addressName.className"))).getText();
+			String text = button.findElement(By.className(getProperty("firstAddress.className"))).getText();
 			test.info("Click on shop address " + text);
 			if (contactsPage.isAddressRight(button, test)) {
 				test.pass("Address is the same " + text);
 
 			} else {
-				test.fail("Address NOT the same " + text);
+				test.fail("Address NOT the same " + text, takeScreenshot());
 			}
-		}*/
+		}
 	}
 
 	@Test
@@ -130,19 +136,20 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		if (rozetkaHomePage.isBrandCorrect()) {
 			test.pass("Correct output value: brand.");
 		} else {
-			test.fail("Sort by brand incorrect");
-
+			test.fail("Sort by brand incorrect", takeScreenshot());
 		}
 		rozetkaHomePage.selectInterval();
 		test.info("Select Max price: " + propertiesReader.getProperties("priceLimit"));
 		if (rozetkaHomePage.isPriceCorrect()) {
 			test.pass("Correct filtration by price. Test successfully completed");
 		} else {
-			test.fail("Incorrect filtration by price");
+			test.fail("Incorrect filtration by price", takeScreenshot());
 		}
 	}
 
-
+	public Media takeScreenshot() {
+		return MediaEntityBuilder.createScreenCaptureFromBase64String(((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.BASE64)).build();
+	}
 
 	@AfterClass
 	static void endTestCase() {
