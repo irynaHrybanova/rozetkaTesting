@@ -25,16 +25,18 @@ public class CheckButtonsONMainPageTest extends TestBase {
 
 	private static ExtentReports report;
 	private static ExtentTest test;
+	private static PropertiesReader propertiesReader;
 	private RozetkaHomePage rozetkaHomePage;
 	private ContactsPage contactsPage;
-	private PropertiesReader propertiesReader;
 
 	@BeforeClass
 	static void initStatic() {
+		propertiesReader = new PropertiesReader("webdriver.properties");
 		report = new ExtentReports();
 		ExtentKlovReporter klovReporter = new ExtentKlovReporter("Rozetka");
-		klovReporter.initMongoDbConnection("localhost", 27017);
-		klovReporter.initKlovServerConnection("http://localhost");
+		PropertiesReader systemPropertiesReader = new PropertiesReader("db.properties");
+		klovReporter.initMongoDbConnection(propertiesReader.getProperties("mongoDbHost"), Integer.parseInt(systemPropertiesReader.getProperties("mongoDbPort")));
+		klovReporter.initKlovServerConnection(propertiesReader.getProperties("klovServerUrl"));
 		report.attachReporter(klovReporter);
 	}
 
@@ -42,12 +44,13 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	private void init() {
 		rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
 		contactsPage = PageFactory.initElements(getDriver(), ContactsPage.class);
-		propertiesReader = new PropertiesReader();
+
 	}
 
 	@Test
 	void checkLanguageChange() {
 		test = report.createTest("Check language change");
+		rozetkaHomePage.goToHomePage();
 		rozetkaHomePage.clickOnChangeLanguageRU();
 		test.info("Clicked on RU to change language");
 		Assert.assertTrue(rozetkaHomePage.isRULanguage());
@@ -64,6 +67,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	@Test(priority = 1)
 	void checkContactsPhoneNumber() {
 		test = report.createTest("Check contacts phone number");
+		rozetkaHomePage.goToHomePage();
 		rozetkaHomePage.clickOnContactPhoneNumber();
 		test.info("Clicked on contact phone number");
 		if (rozetkaHomePage.isOpenModalWindow()) {
@@ -76,15 +80,14 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	@Test(priority = 2)
 	void searchProduct() {
 		test = report.createTest("Search product");
+		rozetkaHomePage.goToHomePage();
 		rozetkaHomePage.searchProduct();
 		test.info("Goods were found");
 		if (rozetkaHomePage.isProductName()) {
 			test.pass("All goods correspond to search name. Test successfully completed");
-			rozetkaHomePage.goToHomePage();
 		} else {
 			test.fail("Test failed", takeScreenshot());
 		}
-		rozetkaHomePage.goToHomePage();
 	}
 
 	@Test(priority = 2)
@@ -96,17 +99,16 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		test.info("Clicked on order button");
 		if (rozetkaHomePage.isOrderPageOpen()) {
 			test.pass("Order page is open. Test successfully completed");
-			rozetkaHomePage.goToHomePage();
 		} else {
 			test.fail("Test failed", takeScreenshot());
 		}
-		rozetkaHomePage.goToHomePage();
 	}
 
 	@Test(priority = 2)
 	void checkShopsAddress() {
 		test = report.createTest("Check Shops address");
 		test.info("Start test");
+		rozetkaHomePage.goToHomePage();
 		contactsPage.clickOnContactsButton();
 		test.info("Click on Contacts button");
 		contactsPage.clickOnFirstAddress();
@@ -118,7 +120,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 			test.info("Click on shop address " + text);
 			if (contactsPage.isAddressRight(button, test)) {
 				test.pass("Address is the same " + text);
-
+				test.info("Test successfully completed");
 			} else {
 				test.fail("Address NOT the same " + text, takeScreenshot());
 			}
@@ -129,6 +131,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	void selectProductCharacteristics() {
 		test = report.createTest("Select product characteristics");
 		test.info("Start test");
+		rozetkaHomePage.goToHomePage();
 		rozetkaHomePage.getPageWithVacuumCleaners();
 		test.info("Open page with vacuum cleaners");
 		rozetkaHomePage.selectBrand();
@@ -143,7 +146,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		if (rozetkaHomePage.isPriceCorrect()) {
 			test.pass("Correct filtration by price. Test successfully completed");
 		} else {
-			test.fail("Incorrect filtration by price", takeScreenshot());
+			test.fail("Incorrect filtration by price");
 		}
 	}
 

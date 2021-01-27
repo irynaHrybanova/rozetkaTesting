@@ -88,7 +88,7 @@ public class RozetkaHomePage extends AbstractPage {
 		String menuCategory = propertiesReader.getProperties("homeDevices.linkText");
 		String vacuumCleaner = propertiesReader.getProperties("vacuumCleaner.linkText");
 		Actions actions = new Actions(driver);
-		actions.moveToElement(driver.findElement(By.linkText(menuCategory))).build().perform();
+		actions.moveToElement(waitWebElement(10, By.linkText(menuCategory))).build().perform();
 		waitWebElement(35, By.linkText(vacuumCleaner)).click();
 	}
 
@@ -103,12 +103,11 @@ public class RozetkaHomePage extends AbstractPage {
 		maxLimit.clear();
 		maxLimit.sendKeys(propertiesReader.getProperties("priceLimit"));
 		maxLimit.submit();
-		sleep(2000);
 	}
 
 	public boolean isBrandCorrect() {
+		sleep(1000);
 		List<WebElement> vacuumCleaners = driver.findElements(By.className(propertiesReader.getProperties("cleanerTitle.className")));
-		sleep(15000);
 		for (WebElement element : vacuumCleaners) {
 			if (!element.getText().toLowerCase().contains(propertiesReader.getProperties("brand.name").toLowerCase())) {
 				return false;
@@ -118,8 +117,8 @@ public class RozetkaHomePage extends AbstractPage {
 	}
 
 	public boolean isPriceCorrect() {
+		sleep(1000);
 		List<WebElement> vacuumCleanersPrices = driver.findElements(By.className(propertiesReader.getProperties("cleanerPrice.className")));
-		sleep(2000);
 		int priceLimit = Integer.parseInt(propertiesReader.getProperties("priceLimit"));
 		return vacuumCleanersPrices.stream()
 				.map(element -> element.getText().replaceAll(" ", ""))

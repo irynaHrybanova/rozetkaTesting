@@ -18,7 +18,7 @@ public class AbstractPage {
 	protected AbstractPage(WebDriver driver) {
 		PageFactory.initElements(driver, this);
 		this.driver = driver;
-		propertiesReader = new PropertiesReader();
+		propertiesReader = new PropertiesReader("webdriver.properties");
 	}
 
 	protected WebDriverWait getWait(long sec) {
@@ -33,10 +33,14 @@ public class AbstractPage {
 		driver.navigate().to(propertiesReader.getProperties("site.url"));
 	}
 
-	protected void sleep(int i) {
+	protected void sleep(int milliseconds) {
 		try {
-			Thread.sleep(i);
+			Thread.sleep(milliseconds);
 		} catch (InterruptedException ignored) {
 		}
 	}
+
+	/*protected void waitUntilVisibleAllElements(List<WebElement> elements, long seconds) {
+		getWait(seconds).until(ExpectedConditions.visibilityOfAllElements(elements));
+	}*/
 }

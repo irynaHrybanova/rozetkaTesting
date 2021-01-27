@@ -12,7 +12,7 @@ public class TestBase {
 
 	@BeforeSuite
 	public void setUpWebDriver() {
-		propertiesReader = new PropertiesReader();
+		propertiesReader = new PropertiesReader("webdriver.properties");
 		driver = initDriver();
 	}
 
