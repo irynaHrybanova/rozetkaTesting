@@ -84,12 +84,10 @@ public class RozetkaHomePage extends AbstractPage {
 		return header.getText().contains(propertiesReader.getProperties("orderHeading.name"));
 	}
 
-	public void getPageWithVacuumCleaners() {
-		String menuCategory = propertiesReader.getProperties("homeDevices.linkText");
-		String vacuumCleaner = propertiesReader.getProperties("vacuumCleaner.linkText");
+	public void getPageWithProducts(String menuCategoryLocator, String productLocator) {
 		Actions actions = new Actions(driver);
-		actions.moveToElement(waitWebElement(10, By.linkText(menuCategory))).build().perform();
-		waitWebElement(35, By.linkText(vacuumCleaner)).click();
+		actions.moveToElement(waitWebElement(10, By.linkText(menuCategoryLocator))).build().perform();
+		waitWebElement(35, By.linkText(productLocator)).click();
 	}
 
 	public void selectBrand() {

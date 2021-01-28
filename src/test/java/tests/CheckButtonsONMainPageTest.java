@@ -35,8 +35,8 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		report = new ExtentReports();
 		ExtentKlovReporter klovReporter = new ExtentKlovReporter("Rozetka");
 		PropertiesReader systemPropertiesReader = new PropertiesReader("db.properties");
-		klovReporter.initMongoDbConnection(propertiesReader.getProperties("mongoDbHost"), Integer.parseInt(systemPropertiesReader.getProperties("mongoDbPort")));
-		klovReporter.initKlovServerConnection(propertiesReader.getProperties("klovServerUrl"));
+		klovReporter.initMongoDbConnection(systemPropertiesReader.getProperties("mongoDbHost"), Integer.parseInt(systemPropertiesReader.getProperties("mongoDbPort")));
+		klovReporter.initKlovServerConnection(systemPropertiesReader.getProperties("klovServerUrl"));
 		report.attachReporter(klovReporter);
 	}
 
@@ -132,22 +132,26 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		test = report.createTest("Select product characteristics");
 		test.info("Start test");
 		rozetkaHomePage.goToHomePage();
-		rozetkaHomePage.getPageWithVacuumCleaners();
-		test.info("Open page with vacuum cleaners");
+		rozetkaHomePage.getPageWithProducts(getProperties("menuCategory.linkText"), getProperties("menuProduct.linkText"));
+		test.info("Click -> " + getProperties("menuCategory.linkText") + "->" + getProperties("menuProduct.linkText"));
 		rozetkaHomePage.selectBrand();
-		test.info("Sort vacuum cleaners by brand: " + propertiesReader.getProperties("brand.name"));
+		test.info("Sort " + getProperties("menuProduct.linkText")  + " by brand: " + getProperties("brand.name"));
 		if (rozetkaHomePage.isBrandCorrect()) {
 			test.pass("Correct output value: brand.");
 		} else {
 			test.fail("Sort by brand incorrect", takeScreenshot());
 		}
 		rozetkaHomePage.selectInterval();
-		test.info("Select Max price: " + propertiesReader.getProperties("priceLimit"));
+		test.info("Select Max price: " + getProperties("priceLimit"));
 		if (rozetkaHomePage.isPriceCorrect()) {
 			test.pass("Correct filtration by price. Test successfully completed");
 		} else {
 			test.fail("Incorrect filtration by price");
 		}
+	}
+
+	private String getProperties(String s) {
+		return propertiesReader.getProperties(s);
 	}
 
 	public Media takeScreenshot() {
