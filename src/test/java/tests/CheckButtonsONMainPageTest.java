@@ -17,6 +17,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pages.ContactsPage;
+import pages.NotebooksPage;
 import pages.RozetkaHomePage;
 
 import java.util.List;
@@ -25,13 +26,13 @@ public class CheckButtonsONMainPageTest extends TestBase {
 
 	private static ExtentReports report;
 	private static ExtentTest test;
-	private static PropertiesReader propertiesReader;
 	private RozetkaHomePage rozetkaHomePage;
 	private ContactsPage contactsPage;
+	private NotebooksPage notebooksPage;
 
 	@BeforeClass
 	static void initStatic() {
-		propertiesReader = new PropertiesReader("webdriver.properties");
+		new PropertiesReader("webdriver.properties");
 		report = new ExtentReports();
 		ExtentKlovReporter klovReporter = new ExtentKlovReporter("Rozetka");
 		PropertiesReader systemPropertiesReader = new PropertiesReader("db.properties");
@@ -44,7 +45,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 	private void init() {
 		rozetkaHomePage = PageFactory.initElements(getDriver(), RozetkaHomePage.class);
 		contactsPage = PageFactory.initElements(getDriver(), ContactsPage.class);
-
+		notebooksPage = PageFactory.initElements(getDriver(), NotebooksPage.class);
 	}
 
 	@Test
@@ -116,7 +117,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		test.info("Get address buttons");
 
 		for (WebElement button : modalAddressButtons) {
-			String text = button.findElement(By.className(getProperty("firstAddress.className"))).getText();
+			String text = button.findElement(By.className(getProperty("05_firstAddress.className"))).getText();
 			test.info("Click on shop address " + text);
 			if (contactsPage.isAddressRight(button, test)) {
 				test.pass("Address is the same " + text);
@@ -132,17 +133,17 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		test = report.createTest("Select product characteristics");
 		test.info("Start test");
 		rozetkaHomePage.goToHomePage();
-		rozetkaHomePage.getPageWithProducts(getProperties("menuCategory.linkText"), getProperties("menuProduct.linkText"));
-		test.info("Click -> " + getProperties("menuCategory.linkText") + "->" + getProperties("menuProduct.linkText"));
+		rozetkaHomePage.getPageWithProducts(getProperty("06_menuCategory.linkText"), getProperty("06_menuProduct.linkText"));
+		test.info("Click -> " + getProperty("06_menuCategory.linkText") + "->" + getProperty("06_menuProduct.linkText"));
 		rozetkaHomePage.selectBrand();
-		test.info("Sort " + getProperties("menuProduct.linkText")  + " by brand: " + getProperties("brand.name"));
+		test.info("Sort " + getProperty("06_menuProduct.linkText") + " by brand: " + getProperty("06_brand.name"));
 		if (rozetkaHomePage.isBrandCorrect()) {
 			test.pass("Correct output value: brand.");
 		} else {
 			test.fail("Sort by brand incorrect", takeScreenshot());
 		}
 		rozetkaHomePage.selectInterval();
-		test.info("Select Max price: " + getProperties("priceLimit"));
+		test.info("Select Max price: " + getProperty("06_priceLimit"));
 		if (rozetkaHomePage.isPriceCorrect()) {
 			test.pass("Correct filtration by price. Test successfully completed");
 		} else {
@@ -150,8 +151,15 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		}
 	}
 
-	private String getProperties(String s) {
-		return propertiesReader.getProperties(s);
+	@Test
+	void addProductToComparisonList() {
+		test = report.createTest("07:Add product to comparison list");
+		test.info("Start test");
+		rozetkaHomePage.goToHomePage();
+		rozetkaHomePage.getPageWithProducts(getProperty("07_menuCategory.linkText"), getProperty("07_menuProduct.linkText"));
+		test.info("Click -> " + getProperty("07_menuCategory.linkText") + "->" + getProperty("07_menuProduct.linkText"));
+		notebooksPage.addProductToComparisonList(Integer.parseInt(getProperty("07_quantity")));
+		//todo check
 	}
 
 	public Media takeScreenshot() {

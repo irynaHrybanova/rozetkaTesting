@@ -24,41 +24,41 @@ public class RozetkaHomePage extends AbstractPage {
 	}
 
 	public boolean isUALanguage() {
-		return driver.getTitle().contains(propertiesReader.getProperties("uaLanguage"));
+		return driver.getTitle().contains(getProperty("01_uaLanguage"));
 	}
 
 	public boolean isRULanguage() {
-		return driver.getTitle().contains(propertiesReader.getProperties("ruLanguage"));
+		return driver.getTitle().contains(getProperty("01_ruLanguage"));
 	}
 
 	public void clickOnContactPhoneNumber() {
-		String phoneButton = propertiesReader.getProperties("contactPhoneButton.className");
+		String phoneButton = getProperty("02_contactPhoneButton.className");
 		WebElement contactPhoneButton = waitWebElement(10, By.className(phoneButton));
 		contactPhoneButton.click();
 	}
 
 	public boolean isOpenModalWindow() {
-		String modalWindow = propertiesReader.getProperties("modalWindow.className");
+		String modalWindow = getProperty("02_modalWindow.className");
 		WebElement modalWindowTitle = waitWebElement(20, By.className(modalWindow));
 		String title = modalWindowTitle.getText();
-		return title.contains(propertiesReader.getProperties("modalWindow.UATitle"));
+		return title.contains(getProperty("02_modalWindow.UATitle"));
 	}
 
 	public void searchProduct() {
-		String searchLocator = propertiesReader.getProperties("searchBar.name");
+		String searchLocator = getProperty("03_searchBar.name");
 		WebElement searchBar = waitWebElement(20, By.name(searchLocator));
-		searchBar.sendKeys(propertiesReader.getProperties("searchProduct.name"));
+		searchBar.sendKeys(getProperty("03_searchProduct.name"));
 
-		String searchButtonPath = propertiesReader.getProperties("searchButton.className");
+		String searchButtonPath = getProperty("03_searchButton.className");
 		WebElement searchButton = driver.findElement(By.className(searchButtonPath));
 		searchButton.click();
 	}
 
 	public boolean isProductName() {
-		List<WebElement> products = driver.findElements(By.className(propertiesReader.getProperties("products.classNames")));
+		List<WebElement> products = driver.findElements(By.className(getProperty("03_products.classNames")));
 		sleep(1000);
 		for (WebElement product : products) {
-			if (!product.getText().toLowerCase().contains(propertiesReader.getProperties("searchProduct.name").toLowerCase())) {
+			if (!product.getText().toLowerCase().contains(getProperty("03_searchProduct.name").toLowerCase())) {
 				return false;
 			}
 		}
@@ -66,48 +66,48 @@ public class RozetkaHomePage extends AbstractPage {
 	}
 
 	public void addProductToCart() {
-		driver.navigate().to(propertiesReader.getProperties("productRefer"));
-		String buyButtonLocator = propertiesReader.getProperties("buyButton.className");
+		driver.navigate().to(getProperty("04_productRefer"));
+		String buyButtonLocator = getProperty("04_buyButton.className");
 		WebElement buyButton = waitWebElement(20, By.className(buyButtonLocator));
 		buyButton.click();
 	}
 
 	public void clickOnOrderProductButton() {
-		String orderProductButton = propertiesReader.getProperties("orderProductButton.className");
+		String orderProductButton = getProperty("04_orderProductButton.className");
 		WebElement orderButton = waitWebElement(20, By.className(orderProductButton));
 		orderButton.click();
 	}
 
 	public boolean isOrderPageOpen() {
-		String headerLocator = propertiesReader.getProperties("orderHeading.className");
+		String headerLocator = getProperty("04_orderHeading.className");
 		WebElement header = waitWebElement(20, By.className(headerLocator));
-		return header.getText().contains(propertiesReader.getProperties("orderHeading.name"));
+		return header.getText().contains(getProperty("04_orderHeading.name"));
 	}
 
 	public void getPageWithProducts(String menuCategoryLocator, String productLocator) {
 		Actions actions = new Actions(driver);
-		actions.moveToElement(waitWebElement(10, By.linkText(menuCategoryLocator))).build().perform();
-		waitWebElement(35, By.linkText(productLocator)).click();
+		actions.moveToElement(waitWebElement(20, By.linkText(menuCategoryLocator))).build().perform();
+		waitWebElement(40, By.linkText(productLocator)).click();
 	}
 
 	public void selectBrand() {
-		String brand = propertiesReader.getProperties("brand.id");
+		String brand = getProperty("06_brand.id");
 		driver.findElement(By.id(brand)).findElement(By.xpath("./..")).click();
 	}
 
 	public void selectInterval() {
-		String maxLimitLocator = propertiesReader.getProperties("maxLimit");
+		String maxLimitLocator = getProperty("06_maxLimit");
 		WebElement maxLimit = waitWebElement(10, By.xpath(maxLimitLocator));
 		maxLimit.clear();
-		maxLimit.sendKeys(propertiesReader.getProperties("priceLimit"));
+		maxLimit.sendKeys(getProperty("06_priceLimit"));
 		maxLimit.submit();
 	}
 
 	public boolean isBrandCorrect() {
 		sleep(1000);
-		List<WebElement> vacuumCleaners = driver.findElements(By.className(propertiesReader.getProperties("cleanerTitle.className")));
+		List<WebElement> vacuumCleaners = driver.findElements(By.className(getProperty("06_cleanerTitle.className")));
 		for (WebElement element : vacuumCleaners) {
-			if (!element.getText().toLowerCase().contains(propertiesReader.getProperties("brand.name").toLowerCase())) {
+			if (!element.getText().toLowerCase().contains(getProperty("06_brand.name").toLowerCase())) {
 				return false;
 			}
 		}
@@ -116,8 +116,8 @@ public class RozetkaHomePage extends AbstractPage {
 
 	public boolean isPriceCorrect() {
 		sleep(1000);
-		List<WebElement> vacuumCleanersPrices = driver.findElements(By.className(propertiesReader.getProperties("cleanerPrice.className")));
-		int priceLimit = Integer.parseInt(propertiesReader.getProperties("priceLimit"));
+		List<WebElement> vacuumCleanersPrices = driver.findElements(By.className(getProperty("06_cleanerPrice.className")));
+		int priceLimit = Integer.parseInt(getProperty("06_priceLimit"));
 		return vacuumCleanersPrices.stream()
 				.map(element -> element.getText().replaceAll(" ", ""))
 				.map(Integer::parseInt)

@@ -14,29 +14,29 @@ public class ContactsPage extends AbstractPage {
 	}
 
 	public void clickOnContactsButton() {
-		String contactsButtonLocator = propertiesReader.getProperties("contacts");
+		String contactsButtonLocator = getProperty("05_contacts");
 		WebElement contactsButton = waitWebElement(20, By.linkText(contactsButtonLocator));
 		contactsButton.click();
 	}
 
 	public void clickOnFirstAddress() {
-		String addressLocator = propertiesReader.getProperties("firstAddress.className");
+		String addressLocator = getProperty("05_firstAddress.className");
 		WebElement address = waitWebElement(20, By.className(addressLocator));
 		address.click();
 	}
 
 	public List<WebElement> getAddressesWebElements() {
-		waitWebElement(20, By.className(propertiesReader.getProperties("firstAddress.className")));
-		String addressesLocator = propertiesReader.getProperties("address.className");
+		waitWebElement(20, By.className(getProperty("05_firstAddress.className")));
+		String addressesLocator = getProperty("05_address.className");
 		return driver.findElements(By.className(addressesLocator));
 	}
 
 	public boolean isAddressRight(WebElement addressButton, ExtentTest test) {
 		addressButton.click();
-		String addressOnMapLocator = propertiesReader.getProperties("addressOnMap.className");
+		String addressOnMapLocator = getProperty("05_addressOnMap.className");
 		sleep(500);
 		WebElement addressInModalWindow = waitWebElement(10, By.className(addressOnMapLocator));
-		String text = addressButton.findElement(By.className(propertiesReader.getProperties("firstAddress.className"))).getText();
+		String text = addressButton.findElement(By.className(getProperty("05_firstAddress.className"))).getText();
 
 		String modalAddress = addressInModalWindow.getText();
 		test.log(Status.INFO, String.format("Comparing: %s and: %s", modalAddress, text));

@@ -30,7 +30,7 @@ public class AbstractPage {
 	}
 
 	public void goToHomePage() {
-		driver.navigate().to(propertiesReader.getProperties("site.url"));
+		driver.navigate().to(getProperty("site.url"));
 	}
 
 	protected void sleep(int milliseconds) {
@@ -38,6 +38,10 @@ public class AbstractPage {
 			Thread.sleep(milliseconds);
 		} catch (InterruptedException ignored) {
 		}
+	}
+
+	protected String getProperty(String name) {
+		return propertiesReader.getProperties(name);
 	}
 
 	/*protected void waitUntilVisibleAllElements(List<WebElement> elements, long seconds) {
