@@ -87,7 +87,7 @@ public class RozetkaHomePage extends AbstractPage {
 	public void getPageWithProducts(String menuCategoryLocator, String productLocator) {
 		Actions actions = new Actions(driver);
 		actions.moveToElement(waitWebElement(20, By.linkText(menuCategoryLocator))).build().perform();
-		waitWebElement(40, By.linkText(productLocator)).click();
+		waitWebElement(30, By.linkText(productLocator)).click();
 	}
 
 	public void selectBrand() {

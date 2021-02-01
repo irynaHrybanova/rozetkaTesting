@@ -147,7 +147,7 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		if (rozetkaHomePage.isPriceCorrect()) {
 			test.pass("Correct filtration by price. Test successfully completed");
 		} else {
-			test.fail("Incorrect filtration by price");
+			test.fail("Incorrect filtration by price", takeScreenshot());
 		}
 	}
 
@@ -157,17 +157,28 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		test.info("Start test");
 		rozetkaHomePage.goToHomePage();
 		rozetkaHomePage.getPageWithProducts(getProperty("07_menuCategory.linkText"), getProperty("07_menuProduct.linkText"));
-		test.info("Click -> " + getProperty("07_menuCategory.linkText") + "->" + getProperty("07_menuProduct.linkText"));
-		notebooksPage.addProductToComparisonList(Integer.parseInt(getProperty("07_quantity")));
-		//todo check
+		test.info("Clicked -> " + getProperty("07_menuCategory.linkText") + "->" + getProperty("07_menuProduct.linkText"));
+		notebooksPage.addProductsToComparisonList(Integer.parseInt(getProperty("07_quantity")));
+		test.info("Added: " + getProperty("07_quantity") + " products for comparisons");
+		notebooksPage.clickOnComparisonButton();
+		test.info("Clicked on comparison button");
+		if (notebooksPage.isModalWindowOpen()) {
+			test.pass("Modal window was open");
+		} else {
+			test.fail("Modal window was NOT open" + takeScreenshot());
+		}
+		notebooksPage.showProductComparisons();
+		test.info("Clicked on comparison list to open comparison page");
+		if (!notebooksPage.isComparisonPageOpen()) {
+			test.fail("Comparison page was Not open" + takeScreenshot());
+		}
 	}
+		public Media takeScreenshot() {
+			return MediaEntityBuilder.createScreenCaptureFromBase64String(((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.BASE64)).build();
+		}
 
-	public Media takeScreenshot() {
-		return MediaEntityBuilder.createScreenCaptureFromBase64String(((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.BASE64)).build();
+		@AfterClass
+		static void endTestCase() {
+			report.flush();
+		}
 	}
-
-	@AfterClass
-	static void endTestCase() {
-		report.flush();
-	}
-}

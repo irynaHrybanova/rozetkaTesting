@@ -36,7 +36,7 @@ public class TestBase {
 		return propertiesReader.getProperties(name);
 	}
 
-	//@AfterSuite
+	@AfterSuite
 	public void tearDown() {
 		if (driver != null) {
 			driver.close();
