@@ -165,20 +165,35 @@ public class CheckButtonsONMainPageTest extends TestBase {
 		if (notebooksPage.isModalWindowOpen()) {
 			test.pass("Modal window was open");
 		} else {
-			test.fail("Modal window was NOT open" + takeScreenshot());
+			test.fail("Modal window was NOT open", takeScreenshot());
 		}
 		notebooksPage.showProductComparisons();
 		test.info("Clicked on comparison list to open comparison page");
 		if (!notebooksPage.isComparisonPageOpen()) {
-			test.fail("Comparison page was Not open" + takeScreenshot());
+			test.fail("Comparison page was Not open", takeScreenshot());
+		}
+		if (notebooksPage.isEmpty()) {
+			test.fail("Comparison list is empty", takeScreenshot());
+		}
+		if (notebooksPage.isActualResultMore()) {
+			test.fail("Actual quantity of products more than expected", takeScreenshot());
+		}
+		if (notebooksPage.isExpectedQuantityLessMaxCompareSize()) {
+			test.fail("Expected quantity of products on the page are NOT right. Expected: " + notebooksPage.getExpectedQuantity()
+					+ " Actual: " + notebooksPage.getActualQuantityOfProducts(), takeScreenshot());
+		}
+		if (notebooksPage.isExpectedQuantityMoreMaxCompareSize()) {
+			test.pass("Expected quantity of products loaded correctly(but max on page = 6). Expected: " + notebooksPage.getExpectedQuantity()
+					+ " Actually loaded on the page: " + notebooksPage.getActualQuantityOfProducts());
 		}
 	}
-		public Media takeScreenshot() {
-			return MediaEntityBuilder.createScreenCaptureFromBase64String(((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.BASE64)).build();
-		}
 
-		@AfterClass
-		static void endTestCase() {
-			report.flush();
-		}
+	public Media takeScreenshot() {
+		return MediaEntityBuilder.createScreenCaptureFromBase64String(((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.BASE64)).build();
 	}
+
+	@AfterClass
+	static void endTestCase() {
+		report.flush();
+	}
+}
