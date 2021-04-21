@@ -43,8 +43,4 @@ public class AbstractPage {
 	protected String getProperty(String name) {
 		return propertiesReader.getProperties(name);
 	}
-
-	/*protected void waitUntilVisibleAllElements(List<WebElement> elements, long seconds) {
-		getWait(seconds).until(ExpectedConditions.visibilityOfAllElements(elements));
-	}*/
 }
